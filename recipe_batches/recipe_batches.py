@@ -3,7 +3,17 @@
 import math
 
 def recipe_batches(recipe, ingredients):
-  pass 
+  differences = []
+  for key, value in recipe.items():
+    if key in ingredients:
+      differences.append(ingredients[key] / value)
+    else:
+      return 0
+  dishes = min(differences)
+  if dishes < 1:
+    return 0
+  else:
+    return math.floor(dishes)
 
 
 if __name__ == '__main__':
