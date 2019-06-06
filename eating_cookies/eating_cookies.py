@@ -7,11 +7,11 @@ import sys
 # recursive solution
 # Can eat 3, 2, or 1 cookie(s) at a time
 
-def eating_cookies(n, cache={0: 1, 1: 1, 2: 2, 3: 4, 4: 7}):
+def eating_cookies(n, cache):
   if n in cache:
     return cache[n]
   else:
-    cache[n] = eating_cookies(n-1) + eating_cookies(n-2) + eating_cookies(n-3)
+    cache[n] = eating_cookies(n-1, cache) + eating_cookies(n-2, cache) + eating_cookies(n-3, cache)
     return cache[n]
 
 if __name__ == "__main__":
