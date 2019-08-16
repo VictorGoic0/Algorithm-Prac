@@ -6,7 +6,46 @@ from collections import namedtuple
 Item = namedtuple('Item', ['index', 'size', 'value'])
 
 def knapsack_solver(items, capacity):
-  pass
+  row = [0] * capacity
+  grid = []
+  for k in range(len(items)):
+    grid.append(row)
+  for i in range(len(items)):
+    item = items[i]
+    for j in range(capacity):
+      grid[i][j] = {'Value': 0, 'Chosen': [], 'size': 0}
+      CC = j + 1
+      if i == 0:
+        if item.size <= CC:
+          grid[i][j]['Value'] += item.value
+          grid[i][j]['Chosen'].append(item.index)
+          grid[i][j]['size'] += item.size
+      else:
+        previous_max = grid[i-1][j]['Value']
+        current_value = item.value
+        remaining_index = j - item.size + 1
+        remaining_item = grid[i-1][remaining_index]
+        if remaining_index > 0:
+          if current_value + remaining_item['Value'] > previous_max and item.size + remaining_item['size'] <= CC:
+            grid[i][j]['Value'] = remaining_item['Value']
+            grid[i][j]['Value'] += current_value
+            grid[i][j]['Chosen'] = remaining_item['Chosen'][:]
+            grid[i][j]['Chosen'].append(item.index)
+            grid[i][j]['size'] = remaining_item['size']
+            grid[i][j]['size'] += item.size
+          else:
+            grid[i][j]['Value'] = previous_max
+            grid[i][j]['Chosen'] = grid[i-1][j]['Chosen'][:]
+            grid[i][j]['size'] = grid[i-1][j]['size']
+        else:
+          grid[i][j]['Value'] = previous_max
+          grid[i][j]['Chosen'] = grid[i-1][j]['Chosen'][:]
+          grid[i][j]['size'] = grid[i-1][j]['size']
+  print(grid)
+  print(capacity, '<---capacity')
+  final_answer = grid[-1][-1]
+  final_answer.pop('size')
+  return final_answer
   
 
 if __name__ == '__main__':
