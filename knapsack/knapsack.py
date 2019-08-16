@@ -26,7 +26,7 @@ def knapsack_solver(items, capacity):
         current_value = item.value
         remaining_index = j - item.size
         remaining_item = grid[i-1][remaining_index]
-        if remaining_index > 0:
+        if remaining_index >= 0:
           if current_value + remaining_item['Value'] > previous_max and item.size + remaining_item['size'] <= CC:
             grid[i][j]['Value'] = remaining_item['Value']
             grid[i][j]['Value'] += current_value
