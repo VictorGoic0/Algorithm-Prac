@@ -16,32 +16,32 @@ def knapsack_solver(items, capacity):
     for j in range(capacity):
       grid[i][j] = {'Value': 0, 'Chosen': [], 'size': 0}
       CC = j + 1
+      current_cell = grid[i][j]
       if i == 0:
         if item.size <= CC:
-          grid[i][j]['Value'] += item.value
-          grid[i][j]['Chosen'].append(item.index)
-          grid[i][j]['size'] += item.size
+          current_cell['Value'] += item.value
+          current_cell['Chosen'].append(item.index)
+          current_cell['size'] += item.size
       else:
         previous_max = grid[i-1][j]['Value']
         current_value = item.value
         remaining_index = j - item.size
         remaining_item = grid[i-1][remaining_index]
-        if remaining_index >= 0:
-          if current_value + remaining_item['Value'] > previous_max and item.size + remaining_item['size'] <= CC:
-            grid[i][j]['Value'] = remaining_item['Value']
-            grid[i][j]['Value'] += current_value
-            grid[i][j]['Chosen'] = remaining_item['Chosen'][:]
-            grid[i][j]['Chosen'].append(item.index)
-            grid[i][j]['size'] = remaining_item['size']
-            grid[i][j]['size'] += item.size
-          else:
-            grid[i][j]['Value'] = previous_max
-            grid[i][j]['Chosen'] = grid[i-1][j]['Chosen'][:]
-            grid[i][j]['size'] = grid[i-1][j]['size']
+        if current_value + remaining_item['Value'] > previous_max and item.size + remaining_item['size'] <= CC:
+            current_cell['Value'] = remaining_item['Value']
+            current_cell['Value'] += current_value
+            current_cell['Chosen'] = remaining_item['Chosen'][:]
+            current_cell['Chosen'].append(item.index)
+            current_cell['size'] = remaining_item['size']
+            current_cell['size'] += item.size
+        elif current_value > previous_max and item.size <= CC:
+          current_cell['Value'] += item.value
+          current_cell['Chosen'].append(item.index)
+          current_cell['size'] += item.size
         else:
-          grid[i][j]['Value'] = previous_max
-          grid[i][j]['Chosen'] = grid[i-1][j]['Chosen'][:]
-          grid[i][j]['size'] = grid[i-1][j]['size']
+            current_cell['Value'] = previous_max
+            current_cell['Chosen'] = grid[i-1][j]['Chosen'][:]
+            current_cell['size'] = grid[i-1][j]['size']
   final_answer = grid[-1][-1]
   final_answer.pop('size')
   return final_answer
